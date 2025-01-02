@@ -1,0 +1,12 @@
+{
+  "unix": {
+    "hostname": "",
+    "username": "",
+    "password": ""
+  },
+  "Windows":{
+    "hostname": "",
+    "username": "",
+    "password": ""
+  }
+}
