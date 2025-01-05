@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Stats{% endblock %}
+{% block content %}
+
+<div class="content">
+  <h1>Stats</h1>
+
+  <div class="chart-controls">
+  <div class="form-field">
+    <label for="timeRange">Time Range:</label>
+    <input type="text" id="timeRange" placeholder="Select date range" readonly />
+    <i id="calendarButton" class="far fa-calendar-alt calendar-icon"></i>
+  </div>
+
+    <div class="form-field">
+      <label for="server">Server:</label>
+      <select id="server">
+        <option value="all">All Servers</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="filePattern">File Pattern:</label>
+      <input type="text" id="filePattern" placeholder="Enter file pattern" />
+    </div>
+
+    <button id="applyFilters" class="apply-filters-button">Apply Filters</button>
+  </div>
+
+  <div id="calendarPopup" class="popup">
+    <div class="popup-content">
+      <span class="close-button" onclick="closeCalendarPopup()">&times;</span>
+    </div>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="trendChart"></canvas>
+  </div>
+</div>
+
+<script>
+  function openCalendarPopup() {
+    // Initialize flatpickr on the timeRange input field
+    flatpickr("#timeRange", {
+      mode: "range",
+      dateFormat: "Y-m-d",
+      onClose: function(selectedDates, dateStr, instance) {
+        document.getElementById("timeRange").value = dateStr;
+        closeCalendarPopup();
+      }
+    });
+
+    // Show the calendar popup
+    document.getElementById("calendarPopup").style.display = "block";
+  }
+
+  function closeCalendarPopup() {
+    document.getElementById("calendarPopup").style.display = "none";
+  }
+</script>
+
+{% endblock %}
