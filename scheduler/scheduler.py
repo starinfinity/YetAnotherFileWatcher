@@ -1,3 +1,4 @@
+import re
 import time
 import json
 import croniter
@@ -44,27 +45,35 @@ def check_file(server, filepath, filename):
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
     try:
-        # Connect to the remote server
-        ssh.connect(hostname=hostname, username=username, password=password)
-        print(f"Connected to {hostname}")
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-        # Use `ls` command to check if the file exists
-        stdin, stdout, stderr = ssh.exec_command(f'ls {full_path}')
-        error_output = stderr.read().decode().strip()
+        print(f"Connecting to {hostname}...")
+        ssh.connect(hostname, username=username, password=password)
 
-        if error_output:
-            print(f"File not found: {error_output}")
-            return False
-        else:
-            print(f"File exists: {full_path}")
+        sftp = ssh.open_sftp()
+
+        print(f"Accessing directory: {filepath}")
+        files = sftp.listdir(filepath)
+
+        # Filter files using regex
+        matched_files = [file for file in files if re.search(filename, file)]
+        sftp.close()
+        if matched_files:
+            print(f"Matched files in {filepath}:")
+            for file in matched_files:
+                print(f" - {file}")
             return True
-
-    except paramiko.SSHException as e:
-        print(f"SSH Error: {e}")
+        else:
+            print(f"No files matched the pattern {filename} in {filepath}.")
+            return False
+    except paramiko.ssh_exception.SSHException as e:
+        print(e)
         return False
 
     finally:
-        ssh.close()
+        if sftp:
+            sftp.close()
         print(f"Disconnected from {hostname}")
 
 
