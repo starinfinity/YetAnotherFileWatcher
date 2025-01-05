@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+<div class="card">
+  <h2 style="text-align: center; font-size: 2em">Hey There, {{ username }}!</h2>
+  <p style="text-align: center">Welcome to File Hawk.</p>
+  <p>Here's a quick overview of what you can do:</p>
+  <ul>
+    <li>
+      <b>Create Tasks:</b> Set up automated file monitoring tasks with custom
+      schedules and configurations.
+    </li>
+    <li>
+      <b>View Tasks:</b> Monitor the status of your tasks and track
+      successes and failures.
+    </li>
+    <li>
+      <b>Analyze Data:</b> Gain insights into file transfer patterns
+    </li>
+  </ul>
+
+</div>
+
+<div class="card-container">
+  <div class="card">
+    <h2>Task Summary</h2>
+    <canvas id="taskSummaryChart"></canvas>
+  </div>
+  <div class="card" id="recent-activity-card">
+    <h2>Recent Activity</h2>
+    <ul id="recentActivityList"></ul>
+  </div>
+</div>
+
+<script>
+  // ... (Your existing JavaScript code) ...
+
+  function createTaskSummaryChart() {
+    fetch('/current_jobs_data')
+      .then(response => response.json())
+      .then(data => {
+        const ctx = document.getElementById("taskSummaryChart").getContext("2d");
+        if (ctx) {
+          new Chart(ctx, {
+            type: "pie",
+            data: {
+              labels: ["Completed Jobs", "Failed Jobs", "Waiting Jobs", "Retrying Jobs", "Other Jobs"],
+              datasets: [{
+                data: [
+                  data.running_jobs,
+                  data.failed_jobs,
+                  data.waiting_jobs,
+                  data.retrying_jobs,
+                  data.total_jobs - (data.running_jobs + data.failed_jobs + data.waiting_jobs + data.retrying_jobs)
+                ],
+                backgroundColor: ["#5cb85c", "#d9534f", "#777", "#f0ad4e", "#5bc0de"], // Customize colors
+              }],
+            },
+            options: {
+              // ... (add any options you want to customize the chart) ...
+            },
+          });
+        }
+      });
+  }
+
+  // Call the function to create the chart
+  createTaskSummaryChart();
+</script>
+{% endblock %}

@@ -9,9 +9,11 @@ from flask_app.models import Schedule
 import paramiko
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-config_file_path = os.path.join(BASE_DIR, "server_config.json")
+config_file_path = os.path.join(BASE_DIR, "../server_config.json")
+
 with open(config_file_path, "r") as f:
     SERVER_CONFIG = json.load(f)
+
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DB_PATH = os.path.join(BASE_DIR, '../instance/scheduler.db')  # Adjust for instance folder

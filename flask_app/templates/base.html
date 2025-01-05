@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Hawk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <a href="{{ url_for('app_blueprint.index') }}" class="logo-link">
+          <div class="logo">
+            <span class="logo-text">File Hawk</span>
+          </div>
+        </a>
+        <div class="user-info">
+          <h3>{{ username }}</h3>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="{{ url_for('app_blueprint.create_task') }}">Create Task</a></li>
+            <li><a href="{{ url_for('app_blueprint.view_tasks') }}">View Tasks</a></li>
+            <li><a href="{{ url_for('app_blueprint.stats') }}">Stats</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <div class="top-bar">
+          <span class="page-title">{% block title %}{% endblock %}</span>
+          <button class="add-button">+</button>
+        </div>
+        <div class="content">{% block content %} {% endblock %}</div>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+  </body>
+</html>

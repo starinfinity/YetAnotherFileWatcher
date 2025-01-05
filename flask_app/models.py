@@ -14,9 +14,9 @@ class Schedule(db.Model):
     server_key = db.Column(db.String(50), nullable=False)
     retries = db.Column(db.Integer, default=3)
     retry_delay = db.Column(db.Integer, default=60)  # Seconds
-    timeout = db.Column(db.Integer, nullable=False)
-    dependency_server_key = db.Column(db.String(50), nullable=False)
-    command = db.Column(db.String(500), nullable=False)
+    timeout = db.Column(db.Integer, default=120)
+    dependency_server_key = db.Column(db.String(50), nullable=True)
+    command = db.Column(db.String(500), nullable=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):

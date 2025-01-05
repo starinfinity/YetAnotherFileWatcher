@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Job Details</h1>
+
+  <div>
+    <h2>Job Counts</h2>
+    <p>Running Jobs: <span id="running-jobs"></span></p>
+    <p>Failed Jobs: <span id="failed-jobs"></span></p>
+    <p>Waiting Jobs: <span id="waiting-jobs"></span></p>
+    <p>Completed Jobs: <span id="completed-jobs"></span></p>
+  </div>
+
+  <div>
+    <h2>Job Status</h2>
+    <canvas id="jobChart"></canvas>
+  </div>
+
+  <script>
+    fetch('/?json=true')  // Fetch data from the landing page route with 'json' parameter
+      .then(response => response.json())
+      .then(data => {
+        // Update job counts
+        document.getElementById('running-jobs').textContent = data.running_jobs;
+        document.getElementById('failed-jobs').textContent = data.failed_jobs;
+        document.getElementById('waiting-jobs').textContent = data.waiting_jobs;
+        document.getElementById('completed-jobs').textContent = data.completed_jobs;
+
+        // Create the chart
+        const ctx = document.getElementById('jobChart').getContext('2d');
+        const jobChart = new Chart(ctx, {
+          type: 'pie',
+          data: data.chart_data,
+          options: {
+            plugins: {
+              legend: {
+                display: true,
+                position: 'right',
+                labels: {
+                  generateLabels: function(chart) {
+                    const data = chart.data;
+                    if (data.labels.length && data.datasets.length) {
+                      return data.labels.map((label, i) => {
+                        const meta = chart.getDatasetMeta(0);
+                        const style = meta.controller.getStyle(i);
+
+                        return {
+                          text: `${label}: ${data.datasets[0].data[i]}`,
+                          fillStyle: style.backgroundColor,
+                          strokeStyle: style.borderColor,
+                          lineWidth: style.borderWidth,
+                          hidden: isNaN(data.datasets[0].data[i]) || meta.data[i].hidden,
+                          index: i
+                        };
+                      });
+                    }
+                    return [];
+                  }
+                }
+              }
+            }
+          }
+        });
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  </script>
+{% endblock %}
